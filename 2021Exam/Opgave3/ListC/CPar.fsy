@@ -135,9 +135,9 @@ ExprNotAccess:
   | Expr SEQAND Expr                    { Andalso($1, $3)       }
   | Expr SEQOR  Expr                    { Orelse($1, $3)        }
   | CREATETABLE LPAR Expr RPAR          { Prim1("createTable", $3) }
-  | UPDATETABLE LPAR Access COMMA Expr COMMA Expr RPAR       { Prim3("updateTable", $3, $5, $7) }
-  | INDEXTABLE LPAR Access COMMA Expr RPAR       { Prim2("indexTable", $3, $5) }
-  | PRINTTABLE LPAR Access RPAR         { Prim1("printTable", $3) }
+  | UPDATETABLE LPAR Expr COMMA Expr COMMA Expr RPAR       { Prim3("updateTable", $3, $5, $7) }
+  | INDEXTABLE LPAR Expr COMMA Expr RPAR       { Prim2("indexTable", $3, $5) }
+  | PRINTTABLE LPAR Expr RPAR         { Prim1("printTable", $3) }
 ;
 
 AtExprNotAccess:
