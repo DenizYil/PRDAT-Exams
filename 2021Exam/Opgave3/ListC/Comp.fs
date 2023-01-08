@@ -180,6 +180,8 @@ and cExpr (e : expr) (varEnv : varEnv) (funEnv : funEnv) : instr list =
          | "printc" -> [PRINTC]
          | "car"    -> [CAR]
          | "cdr"    -> [CDR]
+         | "createTable" -> [CREATETABLE]
+         | "printTable" -> [PRINTTABLE]
          | _        -> raise (Failure "unknown primitive 1"))
     | Prim2(ope, e1, e2) ->
       cExpr e1 varEnv funEnv
@@ -199,7 +201,15 @@ and cExpr (e : expr) (varEnv : varEnv) (funEnv : funEnv) : instr list =
          | "cons"   -> [CONS]
          | "setcar" -> [SETCAR]
          | "setcdr" -> [SETCDR]
+         | "indexTable" -> [INDEXTABLE]
          | _        -> raise (Failure "unknown primitive 2"))
+    | Prim3(ope, e1, e2, e3) ->
+      cExpr e1 varEnv funEnv
+      @ cExpr e2 varEnv funEnv
+      @ cExpr e3 varEnv funEnv
+      @ (match ope with
+         | "updateTable" -> [UPDATETABLE]
+         | _        -> raise (Failure "unknown primitive 3"))
     | Andalso(e1, e2) ->
       let labend   = newLabel()
       let labfalse = newLabel()

@@ -36,10 +36,10 @@ let keyword s =
     | "true"    -> CSTBOOL 1
     | "void"    -> VOID
     | "while"   -> WHILE
-    | "createtable" -> CREATETABLE
-    | "updatetable" -> UPDATETABLE
-    | "indextable" -> INDEXTABLE
-    | "printtable" -> PRINTTABLE
+    | "createTable" -> CREATETABLE
+    | "updateTable" -> UPDATETABLE
+    | "indexTable" -> INDEXTABLE
+    | "printTable" -> PRINTTABLE
     | _         -> NAME s
 
 let cEscape s =
