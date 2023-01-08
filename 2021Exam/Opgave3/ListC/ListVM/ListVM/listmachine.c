@@ -151,6 +151,7 @@ word* readfile(char* filename);
 #endif
 
 #define CONSTAG 0
+#define TABLTAG 1
 
 // Heap size in words
 
@@ -195,6 +196,10 @@ word *freelist;
 #define CDR 29
 #define SETCAR 30
 #define SETCDR 31
+#define CREATETABLE 32
+#define UPDATETABLE 33
+#define INDEXTABLE 34
+#define PRINTTABLE 35
 
 #define STACKSIZE 1000
 
@@ -237,6 +242,10 @@ void printInstruction(word p[], word pc) {
   case CDR:    printf("CDR"); break;
   case SETCAR: printf("SETCAR"); break;
   case SETCDR: printf("SETCDR"); break;
+  case CREATETABLE: printf("CREATETABLE"); break;
+  case UPDATETABLE: printf("UPDATETABLE"); break;
+  case INDEXTABLE: printf("INDEXTABLE"); break;
+  case PRINTTABLE: printf("PRINTTABLE"); break;
   default:     printf("<unknown>"); break;
   }
 }
@@ -379,6 +388,41 @@ int execcode(word p[], word s[], word iargs[], int iargc, int /* boolean */ trac
       word* p = (word*)s[sp];
       p[2] = v;
     } break;
+    case CREATETABLE: {
+        word size = Untag((word)s[sp]);
+        word* p = allocate(TABLTAG, size+1, s, sp);
+        p[1] = Tag(size);
+        for (int i = 2; i<=size+1; i++) {
+          p[i] = Tag(0);
+        }
+        s[sp] = (word)p;
+    } break;
+    case UPDATETABLE: {
+        word v = (IsInt(s[sp]) ? Untag(s[sp]) : s[sp]);
+        word i = Untag(s[--sp]);
+        word* p = (word*)s[--sp];
+        uword size = Untag(p[1]);
+        if (i < 0 || i >= size) {
+          printf("Index out of range\n"); return -1;
+        }
+        p[i+2] = (IsInt(v) ? Tag(v) : v);
+    } break;
+    case INDEXTABLE: {
+        word i = Untag(s[sp]);
+        word* p = (word*)s[--sp];
+        uword size = Untag(p[1]);
+        if (i < 0 || i >= size) {
+          printf("Index out of range\n"); return -1;
+        }
+        s[sp] = p[i+2];
+    } break;
+    case PRINTTABLE: {
+        word* p = (word*)s[sp];
+        uword size = Untag(p[1]);
+        for (int i=0; i<size; i++) {
+          printf("%d ", (IsInt(p[i+2]) ? Untag(p[i+2]) : p[i+2]));
+        }
+    } break;
     default:
       printf("Illegal instruction " WORD_FMT " at address " WORD_FMT "\n",
 	     p[pc - 1], pc - 1);
@@ -496,19 +540,19 @@ word* allocate(unsigned int tag, uword length, word s[], word sp) {
     while (free != 0) {
       word rest = Length(free[0]) - length;
       if (rest >= 0) {
-	if (rest == 0) // Exact fit with free block
-	  *prev = (word*)free[1];
-	else if (rest == 1) { // Create orphan (unusable) block
-	  *prev = (word*)free[1];
-	  free[length + 1] = mkheader(0, rest - 1, Blue);
-	}
-	else { // Make previous free block point to rest of this block
-	  *prev = &free[length + 1];
-	  free[length + 1] = mkheader(0, rest - 1, Blue);
-	  free[length + 2] = free[1];
-	}
-	free[0] = mkheader(tag, length, White);
-	return free;
+	      if (rest == 0) // Exact fit with free block
+	        *prev = (word*)free[1];
+	      else if (rest == 1) { // Create orphan (unusable) block
+	        *prev = (word*)free[1];
+	        free[length + 1] = mkheader(0, rest - 1, Blue);
+	      }
+	      else { // Make previous free block point to rest of this block
+	        *prev = &free[length + 1];
+	        free[length + 1] = mkheader(0, rest - 1, Blue);
+	        free[length + 2] = free[1];
+	      }
+	      free[0] = mkheader(tag, length, White);
+	      return free;
       }
       prev = (word**)&free[1];
       free = (word*)free[1];

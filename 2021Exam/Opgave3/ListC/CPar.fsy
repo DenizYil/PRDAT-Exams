@@ -138,6 +138,7 @@ ExprNotAccess:
   | UPDATETABLE LPAR Expr COMMA Expr COMMA Expr RPAR       { Prim3("updateTable", $3, $5, $7) }
   | INDEXTABLE LPAR Expr COMMA Expr RPAR       { Prim2("indexTable", $3, $5) }
   | PRINTTABLE LPAR Expr RPAR         { Prim1("printTable", $3) }
+
 ;
 
 AtExprNotAccess:

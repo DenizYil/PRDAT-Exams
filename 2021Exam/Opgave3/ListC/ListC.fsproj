@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.fs" />
+    <Compile Include="CLex.fs" />
+    <Compile Include="CPar.fs" />
+    <Compile Include="Absyn.fs" />
+    <Compile Include="Machine.fs" />
+    <Compile Include="Comp.fs" />
+    <Content Include="CLex.fsl" />
+    <Compile Include="CPar.fsi" />
+    <Content Include="CPar.fsy" />
+    <Compile Include="Parse.fs" />
+    <Compile Include="ListCC.fs" />
+    <Compile Include="ParseAndComp.fs" />
+    <Content Include="exam10.lc" />
+  </ItemGroup>
+
+</Project>
