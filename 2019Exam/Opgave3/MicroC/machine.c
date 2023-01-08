@@ -50,6 +50,8 @@
 #define PRINTC 23
 #define LDARGS 24
 #define STOP 25
+#define BREAK 26
+#define WAITKEYPRESS 27
 
 #define STACKSIZE 1000
   
@@ -83,6 +85,8 @@ void printInstruction(int p[], int pc) {
   case PRINTC: printf("PRINTC"); break;
   case LDARGS: printf("LDARGS"); break;
   case STOP:   printf("STOP"); break;
+  case BREAK:  printf("BREAK"); break;
+  case WAITKEYPRESS: printf("WAITKEYPRESS"); break;
   default:     printf("<unknown>"); break; 
   }
 }
@@ -203,6 +207,13 @@ int execcode(int p[], int s[], int iargs[], int iargc, int /* boolean */ trace) 
     } break;
     case STOP:
       return 0;
+    case BREAK: {
+        printStackAndPc(s, bp, sp, p, pc);
+    } break;
+    case WAITKEYPRESS: {
+        printf("Press any key to continue...");
+        getchar();
+    } break;
     default:                  
       printf("Illegal instruction %d at address %d\n", p[pc-1], pc-1);
       return -1;
