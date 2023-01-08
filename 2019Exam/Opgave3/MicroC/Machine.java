@@ -130,10 +130,14 @@ class Machine {
       case PRINTC:
         System.out.print((char)(s[sp])); break;
       case BREAK:
+        printsppc(s, bp, sp, p, pc);
         break;
 
       case WAITKEYPRESS:
+        {System.out.println("Press any key to continue...");
         try {System.in.read();} catch (Exception e) {}
+        }
+        break;
 
       case LDARGS:
 	for (int i=0; i<iargs.length; i++) // Push commandline arguments
