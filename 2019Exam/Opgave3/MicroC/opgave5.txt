@@ -1,3 +1,6 @@
+=================
+OPGAVE 5.1
+=================
 // Start of printArray
 [ 4 -999 42 42 42 42 42 2 5 134 2 2 ]{5:INCSP 1}
 [ 4 -999 42 42 42 42 42 2 5 134 2 2 540024883 ]{7:GETBP}
@@ -22,3 +25,21 @@
 [ 4 -999 42 42 42 42 42 2 5 134 2 2 0 0 ]{55:CSTI 5}
 [ 4 -999 42 42 42 42 42 2 5 134 2 2 0 0 5 ]{57:LT}
 [ 4 -999 42 42 42 42 42 2 5 134 2 2 0 1 ]{58:IFNZRO 18}
+
+=================
+OPGAVE 5.2
+=================
+
+We get the wrong output because Contcomp.fs, optimizes out program to use tail recursion.
+This is a problem because the array which is stored in our previous stack frame is cleared
+when we use the TCALL instruction. We therefore end up with an invalid pointer and the program
+prints stack values which were supposed to be our array.
+
+[ 4 -999 42 42 42 42 42 2 5 2 5 ]{120:ADD}
+[ 4 -999 42 42 42 42 42 2 5 7 ]{121:LDI}
+[ 4 -999 42 42 42 42 42 2 5 2 ]{122:TCALL 1 7 5} // push one argument and clear old stack values
+
+// array doesn't exists anymore, and the pointer is therefore invalid
+[ 4 -999 2 ]{5:INCSP 1}
+[ 4 -999 2 42 ]{7:GETBP}
+[ 4 -999 2 42 2 ]{8:CSTI 1}

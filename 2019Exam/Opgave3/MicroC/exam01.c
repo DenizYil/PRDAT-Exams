@@ -17,5 +17,5 @@ void main() {
         i=i+1;
     }
     printArray(a);
-    print 43; /* Statement to be removed in question 2. */
+    /*print 43; Statement to be removed in question 2. */
 }
