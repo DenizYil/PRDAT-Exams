@@ -201,8 +201,9 @@ let rec cStmt stmt (varEnv : varEnv) (funEnv : funEnv) (C : instr list) : instr 
       //let (lab1, C2) = addLabel(cExpr e varEnv funEnv C)
       let lab1 = newLabel()
       //(BREAK :: IFZERO lab1 :: WAITKEYPRESS :: C2)
+      // [BREAK] @ [(cExpr e varEnv funEnv C)[0]] @ ([IFZERO lab1; WAITKEYPRESS; Label lab1] @ C)
 
-      [BREAK] @ cExpr e varEnv funEnv ([IFZERO lab1; WAITKEYPRESS; Label lab1] @ C)
+      [BREAK] @ (cExpr e varEnv funEnv) ([IFZERO lab1; WAITKEYPRESS; Label lab1] @ C)
     | Block stmts ->
       let rec pass1 stmts ((_, fdepth) as varEnv) =
           match stmts with

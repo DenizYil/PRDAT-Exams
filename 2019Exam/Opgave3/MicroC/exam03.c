@@ -1,10 +1,7 @@
 void main(int n) {
-
-    // x = user input
-
     while (n > 0) {
         print n;
-        break false;
+        break (n % 2);
         n = n - 1;
     }
     println;
